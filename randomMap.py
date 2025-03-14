@@ -50,6 +50,10 @@ class randomMapGame():
         self.boat = pygame.transform.scale(self.boat, (400,200))
         self.treasure = pygame.image.load('treasure2.png').convert_alpha()
         self.board = pygame.image.load('board1.png').convert_alpha()
+        self.rain1 = pygame.image.load('rain1.png').convert_alpha()
+        self.rain2 = pygame.image.load('rain2.png').convert_alpha()
+        self.rain3 = pygame.image.load('rain3.png').convert_alpha()
+        self.rainList = [self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3]
 
         # for finding pixel color at postion
         self.map_image = pygame.image.load('mapbw.png').convert()
@@ -158,20 +162,21 @@ class randomMapGame():
                     coord = tup[1]
                     collected = tup[2]
 
-            boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "black")
+            boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "white")
 
             self.screen.fill((0,0,0))
             # self.screen.blit(self.bg,(0,0))
             self.screen.blit(self.sq,(0,0))
             
-            if (self.square == 4):
-                self.screen.blit(self.boat,(80,100))
             if (self.square == self.treasureLocation):
                 self.screen.blit(self.treasure,(100,100))
             if (any(self.square == tuple[0] for tuple in self.boardLocations)):
                 if (not collected):
                     self.screen.blit(self.board,(coord))
+            if (self.square == 4):
+                self.screen.blit(self.boat,(80,100))
             self.screen.blit(self.image,(self.rect.centerx,self.rect.centery))
+            self.screen.blit(self.rainList[self.animIndex],(0,0))
             self.screen.blit(boardsCollectedDisplay,(40,40))
 
             pygame.display.flip()
