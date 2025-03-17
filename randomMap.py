@@ -7,7 +7,7 @@ from spriteSheet import SpriteSheet
 
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 500
-PLAYER_SPEED = 0.11
+PLAYER_SPEED = 0.15
 
 mapList = [
     (0,0,       500,500),
@@ -186,6 +186,8 @@ class randomMapGame():
                     coord = tup[1]
                     collected = tup[2]
 
+            if self.goldCollected >= 1000:
+                self.goldCollected = 1000
             boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "white")
             goldCollectedDisplay = self.myFont.render("Gold: " + str(self.goldCollected), 1, "yellow")
 
@@ -286,10 +288,8 @@ class randomMapGame():
                     self.boardsCollected += 1
         tLoc = self.treasureLocation[1]
         if ((self.square == self.treasureLocation[0]) and (x-50 <= tLoc[0]+100 <= x+50) and (y-50 <= tLoc[1]+20 <= y+50)):
-            if not self.treasureLocation[2]:
-                for _ in range(0,1000):
-                    self.goldCollected += 1
-                self.treasureLocation[2] = True
+            self.goldCollected += 1
+            self.treasureLocation[2] = True
             
         bLoc = self.boatLocation[1]
         if (self.square == self.boatLocation[0] and (x-50 <= bLoc[0]+190 <= x+50) and (y-50 <= bLoc[1]+160 <= y+50)):
