@@ -47,8 +47,13 @@ class randomMapGame():
         # self.player = pygame.Rect(250,250,30,30)
         Noise.makeImage(SCREEN_HEIGHT,SCREEN_WIDTH,"bw",50)
 
-        self.boat = pygame.image.load('boat1.png').convert_alpha()
-        self.boat = pygame.transform.scale(self.boat, (400,200))
+        boatDamaged = pygame.image.load('boat2.png').convert_alpha()
+        boatRepaired = pygame.image.load('boat3.png').convert_alpha()
+        boatGold = pygame.image.load('boat4.png').convert_alpha()
+        self.boatDamaged = pygame.transform.scale(boatDamaged, (400,200))
+        self.boatRepaired = pygame.transform.scale(boatRepaired, (400,200))
+        self.boatGold = pygame.transform.scale(boatGold, (400,200))
+
         self.treasure = pygame.image.load('treasure2.png').convert_alpha()
         self.emptyTreasure = pygame.image.load('emptyTreasure.png').convert_alpha()
         self.board = pygame.image.load('board1.png').convert_alpha()
@@ -93,14 +98,23 @@ class randomMapGame():
         tLoc = [0,1,2,3,5,6,7,8]
         self.treasureLocation   = [random.choice(tLoc),(random.randint(100,350),random.randint(100,350)),False]
         # random positions for boards
+        bLoc1 = [0,1]
+        bLoc2 = [2,3]
+        bLoc3 = [5,6]
+        bLoc4 = [7,8]
         self.boardLocations = []
-        for _ in range(0,4):
-            self.boardLocations.append((random.randint(0,8),(random.randint(100,350),random.randint(100,350)),False))
+        self.boardLocations.append((random.choice(bLoc1),(random.randint(100,350),random.randint(100,350)),False))
+        self.boardLocations.append((random.choice(bLoc2),(random.randint(100,350),random.randint(100,350)),False))
+        self.boardLocations.append((random.choice(bLoc3),(random.randint(100,350),random.randint(100,350)),False))
+        self.boardLocations.append((random.choice(bLoc4),(random.randint(100,350),random.randint(100,350)),False))
+        # boat location
+        self.boatLocation = [4,(80,100),0]
 
         self.image = self.spriteSheets[self.anim].getSprites(flipped = not self.facingRight)[0]
         self.rect = self.image.get_rect(center=(self.xPos, self.yPos))
 
         self.boardsCollected = 0
+        self.goldCollected = 0
         self.pause = True
 
     def walkable(self):
@@ -173,25 +187,34 @@ class randomMapGame():
                     collected = tup[2]
 
             boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "white")
+            goldCollectedDisplay = self.myFont.render("Gold: " + str(self.goldCollected), 1, "yellow")
 
             self.screen.fill((0,0,0))
             # self.screen.blit(self.bg,(0,0))
             self.screen.blit(self.sq,(0,0))
-            
+            #treasure
             if (self.square == self.treasureLocation[0]):
                 if (not self.treasureLocation[2]):
                     self.screen.blit(self.treasure,self.treasureLocation[1])
                 else:
                     self.screen.blit(self.emptyTreasure,self.treasureLocation[1])
+            # boards
             if (any(self.square == tuple[0] for tuple in self.boardLocations)):
                 if (not collected):
                     self.screen.blit(self.board,(coord))
+            # boats
             if (self.square == 4):
-                self.screen.blit(self.boat,(80,100))
+                if self.boatLocation[2] == 1:
+                    self.screen.blit(self.boatRepaired,self.boatLocation[1])
+                elif self.boatLocation[2] == 2:
+                    self.screen.blit(self.boatGold,self.boatLocation[1])
+                else:
+                    self.screen.blit(self.boatDamaged,self.boatLocation[1])
             # character
             self.screen.blit(self.image,(self.rect.centerx,self.rect.centery))
-            # boards collected
+            # boards collected and gold
             self.screen.blit(boardsCollectedDisplay,(40,40))
+            self.screen.blit(goldCollectedDisplay,(400,40))
             # pause/start screen
             if (self.pause):
                 self.screen.blit(self.pauseScreen,(0,0))
@@ -263,4 +286,14 @@ class randomMapGame():
                     self.boardsCollected += 1
         tLoc = self.treasureLocation[1]
         if ((self.square == self.treasureLocation[0]) and (x-50 <= tLoc[0]+100 <= x+50) and (y-50 <= tLoc[1]+20 <= y+50)):
-            self.treasureLocation[2] = True
+            if not self.treasureLocation[2]:
+                for _ in range(0,1000):
+                    self.goldCollected += 1
+                self.treasureLocation[2] = True
+            
+        bLoc = self.boatLocation[1]
+        if (self.square == self.boatLocation[0] and (x-50 <= bLoc[0]+190 <= x+50) and (y-50 <= bLoc[1]+160 <= y+50)):
+            if self.boardsCollected == 4:
+                self.boatLocation[2] = 1
+            if self.treasureLocation[2]:
+                self.boatLocation[2] = 2
