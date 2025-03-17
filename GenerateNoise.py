@@ -78,12 +78,12 @@ class Noise():
         size = (width,width)
         wh = len(iData)
 
-        sand = [(90,80,61) for _ in range(0,100)] # sand yellow
+        sand = [(75,65,50) for _ in range(0,100)] # sand yellow
         sand.append((100,100,255)) # blue specs
         sand.append((50,50,50)) # dark gray specs
 
-        water = [(26,38,65) for _ in range(0,25)]
-        water.append((100,100,255)) #blue and white
+        water = [(0,40,65) for _ in range(0,25)]
+        water.append((80,80,155)) #blue and white
 
         # print(iData)
         mData = [0 for _ in range(wh)]

@@ -11,11 +11,12 @@ map = randomMapGame()
 # Starting the mixer 
 mixer.init() 
 # Loading the song 
-mixer.music.load("AquaticColorsAlexMoiseev.wav") 
-# Setting the volume 
-mixer.music.set_volume(0.7) 
+music = mixer.Sound("AquaticColorsAlexMoiseev.wav") 
+mixer.music.load("Storm.mp3") 
+# Setting the volume  
 # Start playing the song 
-mixer.music.play() 
+mixer.Sound.play(music)
+mixer.music.play(3,8) 
 
 isGameRunning = True
 while isGameRunning:

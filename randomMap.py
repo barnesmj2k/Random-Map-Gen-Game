@@ -43,17 +43,22 @@ class randomMapGame():
     def __init__(self):
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.myFont = pygame.font.SysFont("Times New Roman", 18)
         # self.player = pygame.Rect(250,250,30,30)
         Noise.makeImage(SCREEN_HEIGHT,SCREEN_WIDTH,"bw",50)
 
         self.boat = pygame.image.load('boat1.png').convert_alpha()
         self.boat = pygame.transform.scale(self.boat, (400,200))
         self.treasure = pygame.image.load('treasure2.png').convert_alpha()
+        self.emptyTreasure = pygame.image.load('emptyTreasure.png').convert_alpha()
         self.board = pygame.image.load('board1.png').convert_alpha()
         self.rain1 = pygame.image.load('rain1.png').convert_alpha()
         self.rain2 = pygame.image.load('rain2.png').convert_alpha()
         self.rain3 = pygame.image.load('rain3.png').convert_alpha()
         self.rainList = [self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3]
+
+        self.pauseScreen = pygame.image.load('pauseScreen.png')
+        self.startText = self.myFont.render("Press SPACE to start", 1, "white")
 
         # for finding pixel color at postion
         self.map_image = pygame.image.load('mapbw.png').convert()
@@ -90,13 +95,13 @@ class randomMapGame():
         # random positions for boards
         self.boardLocations = []
         for _ in range(0,4):
-            self.boardLocations.append((random.randint(0,8),(random.randint(50,350),random.randint(50,350)),False))
+            self.boardLocations.append((random.randint(0,8),(random.randint(100,350),random.randint(100,350)),False))
 
         self.image = self.spriteSheets[self.anim].getSprites(flipped = not self.facingRight)[0]
         self.rect = self.image.get_rect(center=(self.xPos, self.yPos))
 
-        self.myFont = pygame.font.SysFont("Times New Roman", 18)
         self.boardsCollected = 0
+        self.pause = True
 
     def walkable(self):
         x = (int(self.xPos + 22))
@@ -123,11 +128,16 @@ class randomMapGame():
                 elif key[pygame.K_ESCAPE]:
                     pygame.quit()
                     exit()
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_SPACE:
+                        self.pause = not self.pause
 
             self.selectSquare(self.xPos, self.yPos)
             self.walkable()
 
             self.anim = 'IDLE'
+
+            
             if key[pygame.K_w]:
                 self.yPos -= self.speed
                 self.anim = 'RUN'
@@ -175,9 +185,20 @@ class randomMapGame():
                     self.screen.blit(self.board,(coord))
             if (self.square == 4):
                 self.screen.blit(self.boat,(80,100))
+            # character
             self.screen.blit(self.image,(self.rect.centerx,self.rect.centery))
-            self.screen.blit(self.rainList[self.animIndex],(0,0))
+            # boards collected
             self.screen.blit(boardsCollectedDisplay,(40,40))
+            # pause/start screen
+            if (self.pause):
+                self.screen.blit(self.pauseScreen,(0,0))
+                self.screen.blit(self.startText,(175,300))
+            # rain
+            self.screen.blit(self.rainList[self.animIndex],(0,0))
+            
+
+            
+                
 
             pygame.display.flip()
     
@@ -193,10 +214,10 @@ class randomMapGame():
                 return
             else:
                 self.square -= 1
-                self.xPos = SCREEN_WIDTH - 1
-        elif (x >= SCREEN_WIDTH):
+                self.xPos = SCREEN_WIDTH - 21
+        elif (x >= SCREEN_WIDTH - 21):
             if (self.square == 2 or self.square == 5 or self.square == 8):
-                self.xPos = SCREEN_WIDTH - 1
+                self.xPos = SCREEN_WIDTH - 21
                 return
             else:
                 self.square += 1
@@ -207,10 +228,10 @@ class randomMapGame():
                 return
             else:
                 self.square -= 3
-                self.yPos = SCREEN_HEIGHT - 1
-        elif (y >= SCREEN_HEIGHT):
+                self.yPos = SCREEN_HEIGHT - 52 # 52 is player height
+        elif (y >= SCREEN_HEIGHT - 52):
             if (self.square == 6 or self.square == 7 or self.square == 8):
-                self.yPos = SCREEN_HEIGHT - 1
+                self.yPos = SCREEN_HEIGHT - 52
                 return
             else:
                 self.square += 3
@@ -229,7 +250,7 @@ class randomMapGame():
         for tup in self.boardLocations:
             loc = tup[1]
 
-            if (self.square == tup[0] and (x-50) <= loc[0] <= (x+50) and (y-50) <= loc[1] <= (y+50)):
+            if (self.square == tup[0] and (x-50) <= loc[0]+70 <= (x+50) and (y-50) <= loc[1]+20 <= (y+50)):
                 i = self.boardLocations.index(tup) # returns index of square's location in the list
                 a = tup[0]
                 b = tup[1]
