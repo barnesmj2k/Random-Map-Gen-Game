@@ -91,7 +91,7 @@ class randomMapGame():
         self.speed = PLAYER_SPEED
         # random square for treasure
         tLoc = [0,1,2,3,5,6,7,8]
-        self.treasureLocation   = random.choice(tLoc)
+        self.treasureLocation   = [random.choice(tLoc),(random.randint(100,350),random.randint(100,350)),False]
         # random positions for boards
         self.boardLocations = []
         for _ in range(0,4):
@@ -178,8 +178,11 @@ class randomMapGame():
             # self.screen.blit(self.bg,(0,0))
             self.screen.blit(self.sq,(0,0))
             
-            if (self.square == self.treasureLocation):
-                self.screen.blit(self.treasure,(100,100))
+            if (self.square == self.treasureLocation[0]):
+                if (not self.treasureLocation[2]):
+                    self.screen.blit(self.treasure,self.treasureLocation[1])
+                else:
+                    self.screen.blit(self.emptyTreasure,self.treasureLocation[1])
             if (any(self.square == tuple[0] for tuple in self.boardLocations)):
                 if (not collected):
                     self.screen.blit(self.board,(coord))
@@ -258,4 +261,6 @@ class randomMapGame():
                 if(not c):
                     self.boardLocations[i] = (a,b,True)
                     self.boardsCollected += 1
-        
+        tLoc = self.treasureLocation[1]
+        if ((self.square == self.treasureLocation[0]) and (x-50 <= tLoc[0]+100 <= x+50) and (y-50 <= tLoc[1]+20 <= y+50)):
+            self.treasureLocation[2] = True
