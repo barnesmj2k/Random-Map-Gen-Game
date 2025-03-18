@@ -186,11 +186,13 @@ class randomMapGame():
                     coord = tup[1]
                     collected = tup[2]
 
+            # displays for wood and gold
             if self.goldCollected >= 1000:
                 self.goldCollected = 1000
             boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "white")
             goldCollectedDisplay = self.myFont.render("Gold: " + str(self.goldCollected), 1, "yellow")
 
+            # clear background
             self.screen.fill((0,0,0))
             # self.screen.blit(self.bg,(0,0))
             self.screen.blit(self.sq,(0,0))
