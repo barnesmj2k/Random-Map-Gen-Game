@@ -8,6 +8,8 @@ from spriteSheet import SpriteSheet
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 500
 PLAYER_SPEED = 0.15
+IMAGE_PATH = "Assets/Image/"
+SOUND_PATH = "Assets/Sound/"
 
 mapList = [
     (0,0,       500,500),
@@ -47,26 +49,26 @@ class randomMapGame():
         # self.player = pygame.Rect(250,250,30,30)
         Noise.makeImage(SCREEN_HEIGHT,SCREEN_WIDTH,"bw",50)
 
-        boatDamaged = pygame.image.load('boat2.png').convert_alpha()
-        boatRepaired = pygame.image.load('boat3.png').convert_alpha()
-        boatGold = pygame.image.load('boat4.png').convert_alpha()
+        boatDamaged = pygame.image.load(IMAGE_PATH + 'boat2.png').convert_alpha()
+        boatRepaired = pygame.image.load(IMAGE_PATH + 'boat3.png').convert_alpha()
+        boatGold = pygame.image.load(IMAGE_PATH + 'boat4.png').convert_alpha()
         self.boatDamaged = pygame.transform.scale(boatDamaged, (400,200))
         self.boatRepaired = pygame.transform.scale(boatRepaired, (400,200))
         self.boatGold = pygame.transform.scale(boatGold, (400,200))
 
-        self.treasure = pygame.image.load('treasure2.png').convert_alpha()
-        self.emptyTreasure = pygame.image.load('emptyTreasure.png').convert_alpha()
-        self.board = pygame.image.load('board1.png').convert_alpha()
-        self.rain1 = pygame.image.load('rain1.png').convert_alpha()
-        self.rain2 = pygame.image.load('rain2.png').convert_alpha()
-        self.rain3 = pygame.image.load('rain3.png').convert_alpha()
+        self.treasure = pygame.image.load(IMAGE_PATH + 'treasure2.png').convert_alpha()
+        self.emptyTreasure = pygame.image.load(IMAGE_PATH + 'emptyTreasure.png').convert_alpha()
+        self.board = pygame.image.load(IMAGE_PATH + 'board1.png').convert_alpha()
+        self.rain1 = pygame.image.load(IMAGE_PATH + 'rain1.png').convert_alpha()
+        self.rain2 = pygame.image.load(IMAGE_PATH + 'rain2.png').convert_alpha()
+        self.rain3 = pygame.image.load(IMAGE_PATH + 'rain3.png').convert_alpha()
         self.rainList = [self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3]
 
-        self.pauseScreen = pygame.image.load('pauseScreen.png')
+        self.pauseScreen = pygame.image.load(IMAGE_PATH + 'pauseScreen.png')
 
-        self.sail1 = pygame.image.load('sail1.png')
-        self.sail2 = pygame.image.load('sail2.png')
-        self.sail3 = pygame.image.load('sail3.png')
+        self.sail1 = pygame.image.load(IMAGE_PATH + 'sail1.png')
+        self.sail2 = pygame.image.load(IMAGE_PATH + 'sail2.png')
+        self.sail3 = pygame.image.load(IMAGE_PATH + 'sail3.png')
         self.sailList = [self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3]
 
         self.startText = self.myFont.render("Press SPACE to start", 1, "white")
@@ -77,8 +79,8 @@ class randomMapGame():
         self.cSquare = pygame.image.load('mapColor.png').convert()
         self.cSprites = SpriteSheet('mapColor.png', mapList)
         self.bSprites = SpriteSheet('mapbw.png', mapList)
-        idleSpriteSheet = SpriteSheet('Ghost.png', idleSprites)
-        runSpriteSheet = SpriteSheet('Run-Sheet.png', runSprites)
+        idleSpriteSheet = SpriteSheet(IMAGE_PATH + 'Ghost.png', idleSprites)
+        runSpriteSheet = SpriteSheet(IMAGE_PATH + 'Run-Sheet.png', runSprites)
 
         self.facingRight = False
         self.animIndex = 0
@@ -238,6 +240,7 @@ class randomMapGame():
                 self.screen.blit(self.startText,(175,300))
             # sail screen
             if self.showSailScreen:
+                self.anim = 'RUN'
                 self.screen.blit(self.sailList[self.animIndex],(0,0))
             # rain
             self.screen.blit(self.rainList[self.animIndex],(0,0))
