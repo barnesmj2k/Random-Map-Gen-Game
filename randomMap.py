@@ -63,6 +63,12 @@ class randomMapGame():
         self.rainList = [self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3,self.rain1,self.rain2,self.rain3]
 
         self.pauseScreen = pygame.image.load('pauseScreen.png')
+
+        self.sail1 = pygame.image.load('sail1.png')
+        self.sail2 = pygame.image.load('sail2.png')
+        self.sail3 = pygame.image.load('sail3.png')
+        self.sailList = [self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3,self.sail1,self.sail2,self.sail3]
+
         self.startText = self.myFont.render("Press SPACE to start", 1, "white")
 
         # for finding pixel color at postion
@@ -116,6 +122,8 @@ class randomMapGame():
         self.boardsCollected = 0
         self.goldCollected = 0
         self.pause = True
+        self.canSail = False
+        self.showSailScreen = False
 
     def walkable(self):
         x = (int(self.xPos + 22))
@@ -166,6 +174,8 @@ class randomMapGame():
                 self.xPos += self.speed
                 self.facingRight = True
                 self.anim = 'RUN'
+            if key[pygame.K_RETURN] and self.canSail:
+                self.showSailScreen = True
             
             self.move()
 
@@ -191,6 +201,7 @@ class randomMapGame():
                 self.goldCollected = 1000
             boardsCollectedDisplay = self.myFont.render("Wood: " + str(self.boardsCollected), 1, "white")
             goldCollectedDisplay = self.myFont.render("Gold: " + str(self.goldCollected), 1, "yellow")
+            sailDisplay = self.myFont.render("Press enter to sail",1,"white")
 
             # clear background
             self.screen.fill((0,0,0))
@@ -212,6 +223,8 @@ class randomMapGame():
                     self.screen.blit(self.boatRepaired,self.boatLocation[1])
                 elif self.boatLocation[2] == 2:
                     self.screen.blit(self.boatGold,self.boatLocation[1])
+                    self.screen.blit(sailDisplay,(175,300))
+                    self.canSail = True
                 else:
                     self.screen.blit(self.boatDamaged,self.boatLocation[1])
             # character
@@ -223,6 +236,9 @@ class randomMapGame():
             if (self.pause):
                 self.screen.blit(self.pauseScreen,(0,0))
                 self.screen.blit(self.startText,(175,300))
+            # sail screen
+            if self.showSailScreen:
+                self.screen.blit(self.sailList[self.animIndex],(0,0))
             # rain
             self.screen.blit(self.rainList[self.animIndex],(0,0))
             
